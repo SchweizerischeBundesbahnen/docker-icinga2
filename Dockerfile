@@ -32,6 +32,7 @@ RUN mkdir -p /opt/icinga2 \
 
 COPY etc/php/* /etc/php5/
 COPY etc/nginx/* /etc/nginx/
+COPY etc/icingaweb2 /opt/icinga2/default_config/icingaweb2
 COPY etc/icinga2/ido-mysql.conf /opt/icinga2/default_config/icinga2/features-available/ido-mysql.conf
 COPY etc/supervisord.conf /etc/supervisord.conf
 COPY bin/run.sh /opt/icinga2/run.sh
@@ -39,7 +40,7 @@ COPY bin/run.sh /opt/icinga2/run.sh
 RUN adduser nginx icingaweb2 \
   && chmod +x /opt/icinga2/run.sh
 
-VOLUME ["/etc/icinga2"]
+VOLUME ["/etc/icinga2", "/etc/icingaweb2"]
 
 EXPOSE 80
 

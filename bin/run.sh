@@ -42,8 +42,10 @@ if [ ! -f /etc/icinga2/.installed ]; then
   mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME}" < /usr/share/icinga2-ido-mysql/schema/mysql.sql
   mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME_WEB}" < /usr/share/webapps/icingaweb2/etc/schema/mysql.schema.sql
 
-  echo "Creating default icinga web user (admin/admin)..."
+  echo "Creating default icingaweb2 user (admin/admin)..."
   mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME_WEB}" -e "INSERT INTO icingaweb_user (name, active, password_hash) VALUES ('admin', 1, '\$1\$GSwrn03C\$ssgt3XgIogP3BrWF2kw0N.');"
+  mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME_WEB}" -e "INSERT INTO icingaweb_group (name) VALUES ('Administrators');"
+  mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME_WEB}" -e "INSERT INTO icingaweb_group_membership (group_id, username) VALUES (1, 'admin');"
 
   echo "Creating mysql configuration for incinga2...";
   sed -i "s/##DB_HOST##/${DB_HOST}/g" /etc/icinga2/features-available/ido-mysql.conf
@@ -51,6 +53,21 @@ if [ ! -f /etc/icinga2/.installed ]; then
   sed -i "s/##DB_USER##/${DB_USER}/g" /etc/icinga2/features-available/ido-mysql.conf
   sed -i "s/##DB_PW##/${DB_ROOT_PW}/g" /etc/icinga2/features-available/ido-mysql.conf
   icinga2 feature enable ido-mysql
+
+  echo "Creating configuration for icingaweb2...";
+  cp -r /opt/icinga2/default_config/icingaweb2/* /etc/icingaweb2
+  sed -i "s/##DB_HOST##/${DB_HOST}/g" /etc/icingaweb2/resources.ini
+  sed -i "s/##DB_NAME##/${DB_NAME}/g" /etc/icingaweb2/resources.ini
+  sed -i "s/##DB_NAME_WEB##/${DB_NAME_WEB}/g" /etc/icingaweb2/resources.ini
+  sed -i "s/##DB_USER##/${DB_USER}/g" /etc/icingaweb2/resources.ini
+  sed -i "s/##DB_PW##/${DB_ROOT_PW}/g" /etc/icingaweb2/resources.ini
+
+  mkdir /etc/icingaweb2/enabledModules
+  rm -f /etc/icingaweb2/setup.token
+  chown -R nginx:icingaweb2 /etc/icingaweb2
+
+  echo "Enabling monitoring module for icingaweb2...";
+  ln -s /usr/share/webapps/icingaweb2/modules/monitoring /etc/icingaweb2/enabledModules/
 
   touch /etc/icinga2/.installed
   echo "!!!NEVER REMOVE THIS FILE!!!" > /etc/icinga2/.installed
