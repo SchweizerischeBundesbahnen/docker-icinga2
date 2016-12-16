@@ -29,6 +29,7 @@ RUN mkdir -p /opt/icinga2 \
   && mkdir /opt/icinga2/default_config \
   && cp -r /etc/icinga2 /opt/icinga2/default_config/
 
+COPY etc/nginx/* /etc/nginx/
 COPY etc/icinga2/ido-mysql.conf /opt/icinga2/default_config/icinga2/features-available/ido-mysql.conf
 COPY etc/supervisord.conf /etc/supervisord.conf
 COPY bin/run.sh /opt/icinga2/run.sh
