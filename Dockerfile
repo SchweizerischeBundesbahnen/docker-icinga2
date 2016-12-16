@@ -4,7 +4,8 @@ MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 ENV DB_HOST="db" \
   DB_USER="icinga" \
   DB_NAME="icinga" \
-  DB_PW="icinga"
+  DB_NAME_WEB="icingaweb2" \
+  DB_ROOT_PW="icinga"
 
 RUN apk add --update \
   bash \
@@ -24,15 +25,19 @@ RUN apk add --update \
 
 RUN pip install supervisor-stdout
 
-RUN mkdir /run/icinga2 && chown -R icinga:icinga /run/icinga2
+RUN mkdir -p /run/icinga2/cmd && chown -R icinga:icinga /run/icinga2
 RUN mkdir -p /opt/icinga2 \
   && mkdir /opt/icinga2/default_config \
   && cp -r /etc/icinga2 /opt/icinga2/default_config/
 
+COPY etc/php/* /etc/php5/
 COPY etc/nginx/* /etc/nginx/
 COPY etc/icinga2/ido-mysql.conf /opt/icinga2/default_config/icinga2/features-available/ido-mysql.conf
 COPY etc/supervisord.conf /etc/supervisord.conf
 COPY bin/run.sh /opt/icinga2/run.sh
+
+RUN adduser nginx icingaweb2 \
+  && chmod +x /opt/icinga2/run.sh
 
 VOLUME ["/etc/icinga2"]
 

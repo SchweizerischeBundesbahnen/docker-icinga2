@@ -33,14 +33,23 @@ if [ ! -f /etc/icinga2/.installed ]; then
   done
   echo " done"
 
-  echo "Creating database..."
-  mysql -u "${DB_USER}" -p"${DB_PW}" -h "${DB_HOST}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}"
-  mysql -u "${DB_USER}" -p"${DB_PW}" -h "${DB_HOST}" -D "${DB_NAME}" < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+  echo "Creating databases and users..."
+  mysql -u "root" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -e "CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_ROOT_PW}';"
+  mysql -u "root" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}; GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO ${DB_USER}@'%';"
+  mysql -u "root" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME_WEB}; GRANT ALL PRIVILEGES ON ${DB_NAME_WEB}.* TO ${DB_USER}@'%';"
 
+  echo "Creating schema...."
+  mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME}" < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+  mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME_WEB}" < /usr/share/webapps/icingaweb2/etc/schema/mysql.schema.sql
+
+  echo "Creating default icinga web user (admin/admin)..."
+  mysql -u "${DB_USER}" -p"${DB_ROOT_PW}" -h "${DB_HOST}" -D "${DB_NAME_WEB}" -e "INSERT INTO icingaweb_user (name, active, password_hash) VALUES ('admin', 1, '\$1\$GSwrn03C\$ssgt3XgIogP3BrWF2kw0N.');"
+
+  echo "Creating mysql configuration for incinga2...";
   sed -i "s/##DB_HOST##/${DB_HOST}/g" /etc/icinga2/features-available/ido-mysql.conf
   sed -i "s/##DB_NAME##/${DB_NAME}/g" /etc/icinga2/features-available/ido-mysql.conf
   sed -i "s/##DB_USER##/${DB_USER}/g" /etc/icinga2/features-available/ido-mysql.conf
-  sed -i "s/##DB_PW##/${DB_PW}/g" /etc/icinga2/features-available/ido-mysql.conf
+  sed -i "s/##DB_PW##/${DB_ROOT_PW}/g" /etc/icinga2/features-available/ido-mysql.conf
   icinga2 feature enable ido-mysql
 
   touch /etc/icinga2/.installed
