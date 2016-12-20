@@ -77,7 +77,6 @@ fi
 echo <<< EOL
 root=postmaster
 mailhub=${SMTP_SERVER}
-hostname=icinga
 EOL > /etc/ssmtp/ssmtp.conf;
 
 # run application
