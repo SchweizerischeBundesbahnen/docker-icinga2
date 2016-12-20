@@ -39,7 +39,8 @@ RUN apk add --update \
   && make \
   && make install \
   && rm -rf /tmp/monitoring-plugins-2.2 \
-  && apk del alpine-sdk \
+  && apk del \
+  alpine-sdk \
   linux-headers \
   openssl-dev \
   perl-dev \
