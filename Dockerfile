@@ -64,6 +64,9 @@ RUN adduser nginx icingaweb2 \
   && adduser nginx icingacmd \
   && chmod +x /opt/icinga2/run.sh
 
+# Enable suid for ping
+RUN chmod +s /bin/ping
+
 VOLUME ["/etc/icinga2", "/etc/icingaweb2", "/var/lib/icinga2"]
 
 EXPOSE 80
