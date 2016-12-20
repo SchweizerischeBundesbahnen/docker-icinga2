@@ -9,6 +9,7 @@ ENV DB_HOST="db" \
 
 RUN apk add --update \
   bash \
+  fping \
   icinga2 \
   icinga2-bash-completion \
   icingaweb2 \
