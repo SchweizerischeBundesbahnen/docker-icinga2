@@ -5,6 +5,7 @@ echo "Preparing environment... (This will take some time...)"
 
 if [ ! -f /etc/icinga2/.installed ]; then
   cp -r /opt/icinga2/default_config/icinga2/* /etc/icinga2/
+  icinga2 feature enable checker
   icinga2 feature enable command
 
   i=0
