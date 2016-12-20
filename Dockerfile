@@ -9,18 +9,40 @@ ENV DB_HOST="db" \
 
 RUN apk add --update \
   bash \
+  ca-certificates \
   icinga2 \
   icinga2-bash-completion \
   icingaweb2 \
   icingaweb2-bash-completion \
   mariadb-client \
   nginx \
+  perl \
   php5-fpm \
   py-pip \
   sudo \
   supervisor \
   tini \
   wget \
+  && rm -rf /var/cache/apk/*
+
+# Install monitoring plugins from source
+RUN apk add --update \
+  alpine-sdk \
+  linux-headers \
+  openssl-dev \
+  perl-dev \
+  && cd /tmp \
+  && wget https://www.monitoring-plugins.org/download/monitoring-plugins-2.2.tar.gz \
+  && tar xvzf monitoring-plugins-2.2.tar.gz \
+  && cd monitoring-plugins-2.2 \
+  && ./configure \
+  && make \
+  && make install \
+  && rm -rf /tmp/monitoring-plugins-2.2 \
+  && apk del alpine-sdk \
+  linux-headers \
+  openssl-dev \
+  perl-dev \
   && rm -rf /var/cache/apk/*
 
 RUN pip install supervisor-stdout
