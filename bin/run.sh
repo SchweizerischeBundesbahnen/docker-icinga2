@@ -78,7 +78,7 @@ echo <<< EOL
 root=postmaster
 mailhub=${SMTP_SERVER}
 hostname=icinga
-EOL >> /etc/ssmtp/ssmtp.conf;
+EOL > /etc/ssmtp/ssmtp.conf;
 
 # run application
 echo "Starting supervisord..."
