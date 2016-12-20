@@ -16,6 +16,7 @@ RUN apk add --update \
   icingaweb2 \
   icingaweb2-bash-completion \
   mariadb-client \
+  mailx \
   nginx \
   perl \
   php5-fpm \
