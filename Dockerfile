@@ -35,7 +35,7 @@ RUN apk add --update \
   && wget https://www.monitoring-plugins.org/download/monitoring-plugins-2.2.tar.gz \
   && tar xvzf monitoring-plugins-2.2.tar.gz \
   && cd monitoring-plugins-2.2 \
-  && ./configure \
+  && ./configure --prefix=/usr/local/monitoring \
   && make \
   && make install \
   && rm -rf /tmp/monitoring-plugins-2.2 \
