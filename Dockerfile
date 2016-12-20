@@ -5,7 +5,8 @@ ENV DB_HOST="db" \
   DB_USER="icinga" \
   DB_NAME="icinga" \
   DB_NAME_WEB="icingaweb2" \
-  DB_ROOT_PW="icinga"
+  DB_ROOT_PW="icinga" \
+  SMTP_SERVER="localhost"
 
 RUN apk add --update \
   bash \
@@ -19,6 +20,7 @@ RUN apk add --update \
   perl \
   php5-fpm \
   py-pip \
+  ssmtp \
   sudo \
   supervisor \
   tini \
