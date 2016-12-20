@@ -74,10 +74,7 @@ if [ ! -f /etc/icinga2/.installed ]; then
   echo "!!!NEVER REMOVE THIS FILE!!!" > /etc/icinga2/.installed
 fi
 
-echo <<< EOL
-root=postmaster
-mailhub=${SMTP_SERVER}
-EOL > /etc/ssmtp/ssmtp.conf;
+echo "mailhub=${SMTP_SERVER}" > /etc/ssmtp/ssmtp.conf;
 
 # run application
 echo "Starting supervisord..."
