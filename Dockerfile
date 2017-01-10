@@ -10,6 +10,7 @@ ENV DB_HOST="db" \
 
 RUN apk add --update \
   bash \
+  bc \
   ca-certificates \
   curl \
   icinga2 \
