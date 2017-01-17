@@ -20,6 +20,7 @@ RUN apk add --update \
   mariadb-client \
   mailx \
   nginx \
+  openssl \
   perl \
   php5-fpm \
   py2-pip \
