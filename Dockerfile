@@ -51,46 +51,6 @@ RUN apk add --update \
   perl-dev \
   && rm -rf /var/cache/apk/*
 
-# Install graphite
-RUN apk add --update \
-  alpine-sdk \
-  fontconfig \
-  git \
-  libffi \
-  libffi-dev \
-  python-dev \
-  uwsgi \
-  && pip install cairocffi \
-  && pip install django-tagging==0.4.3 \
-  && pip install pytz \
-  && pip install Django==1.9 \
-  && mkdir -p /opt/graphite \
-  # Install graphite web frontend
-  && cd /opt/graphite \
-  && git clone https://github.com/graphite-project/graphite-web.git \
-  && cd /opt/graphite/graphite-web \
-  && python setup.py install \
-  # Install carbon
-  && cd /opt/graphite \
-  && git clone https://github.com/graphite-project/carbon.git \
-  && cd /opt/graphite/carbon \
-  && python setup.py install \
-  # Install whisper
-  && cd /opt/graphite \
-  && git clone https://github.com/graphite-project/whisper.git \
-  && cd /opt/graphite/whisper \
-  && python setup.py install \
-  # Install ceres
-  && cd /opt/graphite \
-  && git clone https://github.com/graphite-project/ceres.git \
-  && cd /opt/graphite/ceres \
-  && python setup.py install \
-  && apk del \
-  alpine-sdk \
-  git \
-  libffi-dev \
-  && rm -rf /var/cache/apk/*
-
 RUN pip install supervisor-stdout
 
 RUN mkdir -p /run/icinga2/cmd && chown -R icinga:icinga /run/icinga2
