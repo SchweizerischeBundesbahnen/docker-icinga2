@@ -52,7 +52,8 @@ RUN apk add --update \
   perl-dev \
   && rm -rf /var/cache/apk/*
 
-RUN pip install supervisor-stdout
+RUN pip install supervisor-stdout \
+  && pip install awscli
 
 RUN mkdir -p /run/icinga2/cmd && chown -R icinga:icinga /run/icinga2
 RUN mkdir -p /opt/icinga2 \
