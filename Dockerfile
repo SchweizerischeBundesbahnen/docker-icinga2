@@ -53,7 +53,8 @@ RUN apk add --update \
   && rm -rf /var/cache/apk/*
 
 RUN pip install supervisor-stdout \
-  && pip install awscli
+  && pip install awscli \
+  && pip install nagios-cloudwatch-plugin
 
 RUN mkdir -p /run/icinga2/cmd && chown -R icinga:icinga /run/icinga2
 RUN mkdir -p /opt/icinga2 \
